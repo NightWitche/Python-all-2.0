@@ -1,0 +1,26 @@
+import telebot
+from logger import logger
+
+token = '5711304560:AAFfl-4LojcpmI24g55Pkr9lamzVeA8pTw8'
+bot = telebot.TeleBot(token)
+
+@bot.message_handler(commands=['start', 'help'])
+def start(message):
+
+    bot.send_message(message.chat.id, 'Введите выражение для расчёта')
+
+@bot.message_handler(func = lambda message: True)
+def answer_to_user(message):
+
+    msg = message.text.replace(' ', '')
+
+    try:
+        answer = str(eval(msg))
+        result = f'{msg} = {answer}'
+        logger(result)
+        bot.send_message(message.chat.id, result)         
+    except:
+        bot.send_message(message.chat.id, 'Ошибка! Повторите ввод...')
+    
+
+bot.polling(non_stop=True)
